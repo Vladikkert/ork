@@ -1,18 +1,20 @@
 
 from binance.um_futures import UMFutures
-from keys import dragons
+from keys import dragons, TELEGRAM_TOKEN, TELEGRAM_CHANNEL
 import time
 import pickle
 import threading
 import shutil
+import telebot
 client = UMFutures(key=dragons['main'][0],  secret=dragons['main'][1])
+StBot = telebot.TeleBot(TELEGRAM_TOKEN, num_threads=1)
 
 #Добываем золото и обогащаем его
 def get_gold():
     gold = client.ticker_24hr_price_change()
     sorted_gold = sorted(gold, key=lambda x: float(x['priceChangePercent']), reverse=True)
-    sorted_gold_10 = sorted_gold[:10]
-    enriched_gold = [[d['symbol'], d['priceChangePercent']] for d in sorted_gold_10]
+    sorted_gold_10 = sorted_gold[:6]
+    enriched_gold = [d['symbol'] for d in sorted_gold_10]
     print(enriched_gold)
     return enriched_gold
 
@@ -100,7 +102,7 @@ def find_diamond():
     # return [diamond, diamond_in_gold[diamond]]
 
     with open('enriched_gold.pkl', 'rb') as f:
-         container_for_enriched_gold = pickle.load(f)\
+         container_for_enriched_gold = pickle.load(f)
 
     diamond_in_gold = {enriched_gold: 0 for enriched_gold in container_for_enriched_gold[0]}
 
@@ -246,25 +248,9 @@ def continue_shaman_ork_work_test():
             get_diamond = find_diamond()
             print('Алмаз найден! Это:', get_diamond[0], 'Его сила равна:',  get_diamond[1])
 
-            try:
-                with open('diamonds.pkl', 'rb') as f:
-                    container_for_diamonds = pickle.load(f)
+            if get_diamond[1] > 4:
 
-                if len(container_for_diamonds) < 3:
-                    container_for_diamonds.append(get_diamond)
-                else:
-                    container_for_diamonds.pop(0)
-                    container_for_diamonds.append(get_diamond)
-
-                #print(container_for_diamonds)  # выводит []
-
-                with open('diamonds.pkl', 'wb') as f:
-                    pickle.dump(container_for_diamonds, f)
-
-            except:
-                print('Не получается открыть diamonds.pkl')
-
-
+                    StBot.send_message(TELEGRAM_CHANNEL, get_diamond)
 
 
 
@@ -282,8 +268,6 @@ def continue_shaman_ork_work_test():
 
 
 
-
-
 if __name__ == "__main__":
     a = 1
     if a == 1:
@@ -296,11 +280,11 @@ if __name__ == "__main__":
         #Запускаем поиск алмаза из добытого золота шаманом орков
         ############ Если хотим пересоздать орка, то target=create_shaman_ork_and_start_work()
         ### Если хотим продолжить таскать золото, то target=continue_shaman_ork_work()
-        # shaman_ork_work = threading.Thread(target=continue_shaman_ork_work_test)
-        # shaman_ork_work.start()
+        shaman_ork_work = threading.Thread(target=continue_shaman_ork_work_test)
+        shaman_ork_work.start()
     else:
         #Если надо перезапустить даймонд
-        diamond = []
+        diamond = [] 
         with open('diamonds.pkl', 'wb') as f:
             pickle.dump(diamond, f)
         with open('diamonds.pkl', 'rb') as f:
