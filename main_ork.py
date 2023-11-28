@@ -7,7 +7,7 @@ import threading
 import shutil
 import telebot
 client = UMFutures(key=dragons['main'][0],  secret=dragons['main'][1])
-StBot = telebot.TeleBot(TELEGRAM_TOKEN, num_threads=1)
+Wyverna = telebot.TeleBot(TELEGRAM_TOKEN, num_threads=1)
 
 #Добываем золото и обогащаем его
 def get_gold():
@@ -15,71 +15,10 @@ def get_gold():
     sorted_gold = sorted(gold, key=lambda x: float(x['priceChangePercent']), reverse=True)
     sorted_gold_10 = sorted_gold[:6]
     enriched_gold = [d['symbol'] for d in sorted_gold_10]
-    print(enriched_gold)
+    #print(enriched_gold)
     return enriched_gold
 
-#Создаем контейнер для обогащенного золота
-def container_for_enriched_gold_create():
-    container_for_enriched_gold = []
 
-    with open('enriched_gold.pkl', 'wb') as f:
-        pickle.dump(container_for_enriched_gold, f)
-
-#Заставляем орка таскать золото в казну
-def black_ork_work():
-    take_gold = get_gold()
-
-    with open('enriched_gold.pkl', 'rb') as f:
-        container_for_enriched_gold = pickle.load(f)
-
-
-    if len(container_for_enriched_gold) < 2:
-        container_for_enriched_gold.append(take_gold)
-    else:
-        container_for_enriched_gold.pop(0)
-        container_for_enriched_gold.append(take_gold)
-
-    with open('enriched_gold.pkl', 'wb') as f:
-        pickle.dump(container_for_enriched_gold, f)
-
-
-##########################################################
-
-#Проверяем чернорабочего работает ли он еще
-def black_ork_check():
-    with open('enriched_gold.pkl', 'rb') as f:
-        container_for_enriched_gold = pickle.load(f)
-
-    print(container_for_enriched_gold)  # выводит []
-
-
-#Создаем чернорабочего и заставляем его работать пока не сдохнет
-def create_black_ork_and_start_work():
-    container_for_enriched_gold_create()
-    while True:
-        black_ork_work()
-        black_ork_check()
-        time.sleep(5)
-
-
-#Берем готового чернорабочего и заставляем его работать пока не сдохнет
-#Основная
-def continue_black_ork_work():
-    while True:
-        try:
-            black_ork_work()
-        except Exception as m:
-            print('Черный орк не хочет работать!', m)
-        try:
-            black_ork_check()
-        except:
-            print('Черный орк не хочет чтобы на него смотрели!')
-        time.sleep(5)
-
-
-####################################################################
-####################################################################
-####################################################################
 
 #Находим алмаз
 def find_diamond():
@@ -131,163 +70,73 @@ def find_diamond():
     return [diamond, diamond_in_gold[diamond]]
 
 
-#Создаем контейнер для алмаза
-def container_for_diamonds_create():
-    container_for_diamonds = []
-    with open('diamonds.pkl', 'wb') as f:
-        pickle.dump(container_for_diamonds, f)
-
-
-#Заставляем шамана таскать алмазы вождю
-def shaman_ork_work():
-    get_diamond = find_diamond()
-
-    with open('diamonds.pkl', 'rb') as f:
-        container_for_diamonds = pickle.load(f)
-
-
-    if len(container_for_diamonds) < 2:
-        container_for_diamonds.append(get_diamond)
-    else:
-        container_for_diamonds.pop(0)
-        container_for_diamonds.append(get_diamond)
-
-    with open('diamonds.pkl', 'wb') as f:
-        pickle.dump(container_for_diamonds, f)
-
-
-##########################################################
-
-#Проверяем шамана работает ли он еще
-def shaman_ork_check():
-    with open('diamonds.pkl', 'rb') as f:
-        container_for_diamonds = pickle.load(f)
-
-    print(container_for_diamonds)  # выводит []
-
-
-#Создаем шамана и заставляем его работать пока не сдохнет
-def create_shaman_ork_and_start_work():
-    try:
-        container_for_diamonds_create()
-    except:
-        print('Не можем создать контейнер для алмаза')
-    while True:
-        try:
-            shaman_ork_work()
-        except:
-            print('Шаман не хочет работать')
-        try:
-            shaman_ork_check()
-        except:
-            print('Шаман не хочет чтобы на него смотрели')
-        time.sleep(5)
-
-#Берем готового шамана и заставляем его работать пока не сдохнет
-#Основная
-def continue_shaman_ork_work():
-    while True:
-        try:
-            shaman_ork_work()
-        except:
-            print('Шаман не хочет работать')
-        try:
-            shaman_ork_check()
-        except:
-            print('Шаман не хочет чтобы на него смотрели')
-        time.sleep(5)
-
 
 ####################################################################
 ####################################################################
 ####################################################################
-#Тестовый чернорабочий!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-def continue_black_ork_work_test():
+
+def black_ork_work():
+    count_wyverna = 719
     while True:
         #black_ork_work()
 
-        with lock:
-            take_gold = get_gold()
-
-            # gold = client.ticker_24hr_price_change(None)
-            # print(gold[0]['priceChange'])
-            # sorted_gold = sorted(gold, key=lambda x: float(x['priceChangePercent']), reverse=True)
-            # sorted_gold_10 = sorted_gold[:15]
-            # enriched_gold = [d['symbol'] for d in sorted_gold_10]
-
-            #take_gold = enriched_gold
+        take_gold = get_gold()
 
 
-            with open('enriched_gold.pkl', 'rb') as f:
-                container_for_enriched_gold = pickle.load(f)
+        with open('enriched_gold.pkl', 'rb') as f:
+            container_for_enriched_gold = pickle.load(f)
 
-            if len(container_for_enriched_gold) < 500:
-                container_for_enriched_gold.append(take_gold)
-                print('Количество золота:', len(container_for_enriched_gold))
-            else:
-                container_for_enriched_gold.pop(0)
-                container_for_enriched_gold.append(take_gold)
+        if len(container_for_enriched_gold) < 500:
+            container_for_enriched_gold.append(take_gold)
+            #print('Количество золота:', len(container_for_enriched_gold))
+        else:
+            container_for_enriched_gold.pop(0)
+            container_for_enriched_gold.append(take_gold)
 
-                print('Количество золота:', len(container_for_enriched_gold))  # выводит []
+            #print('Количество золота:', len(container_for_enriched_gold)) 
 
-            with open('enriched_gold.pkl', 'wb') as f:
-                pickle.dump(container_for_enriched_gold, f)
+        with open('enriched_gold.pkl', 'wb') as f:
+            pickle.dump(container_for_enriched_gold, f)
+
+        # Отправляем сообщение что бот работает в телеграмм каждый час
+        if count_wyverna == 720:    
+            try:
+                Wyverna.send_message(TELEGRAM_CHANNEL, 'Орки добывают руду!')
+                count_wyverna = 0
+            except:
+                continue
+        count_wyverna += 1
 
         time.sleep(5)
 
-####################################################################
-####################################################################
-####################################################################
-#Тестовый шаман!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-def continue_shaman_ork_work_test():
+def shaman_ork_work():
     while True:
         #shaman_ork_work()
-        with lock:
-            get_diamond = find_diamond()
-            print('Алмаз найден! Это:', get_diamond[0], 'Его сила равна:',  get_diamond[1])
+        get_diamond = find_diamond()
+        #print('Алмаз найден! Это:', get_diamond[0], 'Его сила равна:',  get_diamond[1])
 
+        try:
             if get_diamond[1] > 4:
-
-                    StBot.send_message(TELEGRAM_CHANNEL, get_diamond)
-
-
-
-                ##########################################
-
-                #shaman_ork_check()
+                        Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
+        except:
+            continue
 
 
-        time.sleep(5)
+        time.sleep(5) 
 
 ####################################################################
 ####################################################################
 ####################################################################
-#Телеграмм грифон
-
 
 
 if __name__ == "__main__":
-    a = 1
-    if a == 1:
-        #Запускаем добычу золота чернорабочим орков
-        ############ Если хотим пересоздать орка, то target=create_black_ork_and_start_work()
-        ### Если хотим продолжить таскать золото, то target=continue_black_ork_work()
-        lock = threading.Lock()
-        black_ork_work = threading.Thread(target=continue_black_ork_work_test)
-        black_ork_work.start()
-        #Запускаем поиск алмаза из добытого золота шаманом орков
-        ############ Если хотим пересоздать орка, то target=create_shaman_ork_and_start_work()
-        ### Если хотим продолжить таскать золото, то target=continue_shaman_ork_work()
-        shaman_ork_work = threading.Thread(target=continue_shaman_ork_work_test)
-        shaman_ork_work.start()
-    else:
-        #Если надо перезапустить даймонд
-        diamond = [] 
-        with open('diamonds.pkl', 'wb') as f:
-            pickle.dump(diamond, f)
-        with open('diamonds.pkl', 'rb') as f:
-            container_for_diamonds = pickle.load(f)
-        print(container_for_diamonds)
 
+    #Запускаем добычу золота чернорабочим орков
+    black_ork_work = threading.Thread(target=black_ork_work)
+    black_ork_work.start()
+
+    #Запускаем поиск алмаза из добытого золота шаманом орков
+    shaman_ork_work = threading.Thread(target=shaman_ork_work)
+    shaman_ork_work.start()
