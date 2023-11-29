@@ -9,6 +9,19 @@ import telebot
 client = UMFutures(key=dragons['main'][0],  secret=dragons['main'][1])
 Wyverna = telebot.TeleBot(TELEGRAM_TOKEN, num_threads=1)
 
+
+#Функция загрузки из файла
+def load(file):
+    with open(f'{file}.pkl', 'rb') as f:
+        data = pickle.load(f)
+    return data
+
+#Функция записи в файл
+def dump(file, data):
+    with open(f'{file}.pkl', 'wb') as f:
+        pickle.dump(data, f)
+
+
 #Добываем золото и обогащаем его
 def get_gold():
     gold = client.ticker_24hr_price_change()
@@ -40,8 +53,7 @@ def find_diamond():
     #
     # return [diamond, diamond_in_gold[diamond]]
 
-    with open('enriched_gold.pkl', 'rb') as f:
-         container_for_enriched_gold = pickle.load(f)
+    container_for_enriched_gold = load('enriched_gold')
 
     diamond_in_gold = {enriched_gold: 0 for enriched_gold in container_for_enriched_gold[0]}
 
@@ -79,27 +91,41 @@ def find_diamond():
 def black_ork_work():
     count_wyverna = 719
     while True:
-        #black_ork_work()
 
-        take_gold = get_gold()
+        #Добываем золото
+        try:
+
+            take_gold = get_gold()
+        
+        except:
+            time.sleep(60)
+            print("Вероятно проблемы c шахтой Binance!")
+            continue
 
 
-        with open('enriched_gold.pkl', 'rb') as f:
-            container_for_enriched_gold = pickle.load(f)
+        #Сохраняем золото
+        try:
 
-        if len(container_for_enriched_gold) < 500:
-            container_for_enriched_gold.append(take_gold)
-            #print('Количество золота:', len(container_for_enriched_gold))
-        else:
-            container_for_enriched_gold.pop(0)
-            container_for_enriched_gold.append(take_gold)
+            container_for_enriched_gold = load('enriched_gold')
 
-            #print('Количество золота:', len(container_for_enriched_gold)) 
+            if len(container_for_enriched_gold) < 500:
+                container_for_enriched_gold.append(take_gold)
+                #print('Количество золота:', len(container_for_enriched_gold))
+            else:
+                container_for_enriched_gold.pop(0)
+                container_for_enriched_gold.append(take_gold)
 
-        with open('enriched_gold.pkl', 'wb') as f:
-            pickle.dump(container_for_enriched_gold, f)
+                #print('Количество золота:', len(container_for_enriched_gold)) 
+                
 
-        # Отправляем сообщение что бот работает в телеграмм каждый час
+            dump('enriched_gold', container_for_enriched_gold)
+
+        except:
+            time.sleep(60)
+            print("Вероятно проблемы c файлом enriched_gold.pkl !")
+            continue
+
+        # Отправляем сообщение что орк работает
         if count_wyverna == 720:    
             try:
                 Wyverna.send_message(TELEGRAM_CHANNEL, 'Орки добывают руду!')
@@ -118,8 +144,12 @@ def shaman_ork_work():
         #print('Алмаз найден! Это:', get_diamond[0], 'Его сила равна:',  get_diamond[1])
 
         try:
+            print(get_diamond[0])
+            print(load('last_diamond'))
             if get_diamond[1] > 4:
-                        Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
+                if get_diamond[0] != load('last_diamond'):
+                    Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
+                    dump('last_diamond', get_diamond[0])
         except:
             continue
 
