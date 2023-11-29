@@ -52,7 +52,6 @@ def find_diamond():
     # diamond = max(diamond_in_gold, key=diamond_in_gold.get)
     #
     # return [diamond, diamond_in_gold[diamond]]
-
     container_for_enriched_gold = load('enriched_gold')
 
     diamond_in_gold = {enriched_gold: 0 for enriched_gold in container_for_enriched_gold[0]}
@@ -139,9 +138,14 @@ def black_ork_work():
 
 def shaman_ork_work():
     while True:
-        #shaman_ork_work()
-        get_diamond = find_diamond()
-        #print('Алмаз найден! Это:', get_diamond[0], 'Его сила равна:',  get_diamond[1])
+        try:
+            #shaman_ork_work()
+            get_diamond = find_diamond()
+            #print('Алмаз найден! Это:', get_diamond[0], 'Его сила равна:',  get_diamond[1])
+        except:
+            time.sleep(60)
+            print("Проблемы c поиском алмазов!")
+            continue
 
         try:
             print(get_diamond[0])
@@ -151,6 +155,8 @@ def shaman_ork_work():
                     Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
                     dump('last_diamond', get_diamond[0])
         except:
+            time.sleep(60)
+            print("Проблемы c отправкой алмазов в телеграм!")
             continue
 
 
