@@ -7,13 +7,22 @@ import threading
 import shutil
 import telebot
 import requests
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d) [%(filename)s]', datefmt='%d/%m/%Y %I:%M:%S',
+                    encoding = 'utf-8', filemode='w')
+
+warlock = logging.getLogger(__name__)
+handler = logging.FileHandler('warlock.log', encoding='utf-8')
+formatter = logging.Formatter('%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d) [%(filename)s]')
+handler.setFormatter(formatter)
+warlock.addHandler(handler)
 
 Wyverna = telebot.TeleBot(TELEGRAM_TOKEN, num_threads=1)
 
 DEPOSIT = 100
 
 client = UMFutures(key=dragons['aurora'][0],  secret=dragons['aurora'][1])
-
 
 #Функция загрузки из файла
 def load(file):
@@ -137,7 +146,7 @@ def orks_attack(symbol):
 
 
 def black_ork_work():
-    count_wyverna = 719
+    count_wyverna = 320
     while True:
 
         #Добываем золото
@@ -145,9 +154,10 @@ def black_ork_work():
 
             take_gold = get_gold()
         
-        except:
+        except Exception as e:
+            warlock.critical('Добыча золота приостановилась мой вождь!')
+            warlock.exception(e)
             time.sleep(60)
-            print("Вероятно проблемы c шахтой Binance!")
             continue
 
 
@@ -167,20 +177,28 @@ def black_ork_work():
                 
 
             dump('enriched_gold', container_for_enriched_gold)
-
-        except:
+       
+        except Exception as e:
+            warlock.critical('золото не сохраняется!')
+            warlock.exception(e)
             time.sleep(60)
-            print("Вероятно проблемы c файлом enriched_gold.pkl !")
             continue
 
         # Отправляем сообщение что орк работает
-        if count_wyverna == 720:    
+        if count_wyverna == 325:    
             try:
+                warlock.info('Орки добывают руду!')
                 Wyverna.send_message(TELEGRAM_CHANNEL, 'Орки добывают руду!')
                 count_wyverna = 0
-            except:
+        
+            except Exception as e:
+                warlock.critical('Виверна приболела!')
+                warlock.exception(e)
+                time.sleep(60)
                 continue
+
         count_wyverna += 1
+
 
         time.sleep(5)
 
@@ -196,29 +214,26 @@ def shaman_ork_work():
             print("Проблемы c поиском алмазов!")
             continue
 
-        try:
-            print(get_diamond[0])
-            print(load('last_diamond'))
-            if get_diamond[1] > 4:
-                if get_diamond[0] != load('last_diamond'):
-                    
-                    try:
-                        orks_attack(get_diamond[0])
-                    except:
-                        print('Атака провалилась...')
-                        continue
+        if get_diamond[1] > 4:
+            if get_diamond[0] != load('last_diamond'):
+                
+                try:
+                    orks_attack(get_diamond[0])
+                except Exception as e:
+                    warlock.critical('Атака провалилась!')
+                    warlock.exception(e)
+                    time.sleep(60)
+                    continue
 
-                    try:
-                        Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
-                    except:
-                        print('Виверна не смогла доставить алмаз...')
-                        continue
+                try:
+                    Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
+                except Exception as e:
+                    warlock.critical('Виверна не смогла доставить алмаз!')
+                    warlock.exception(e)
+                    time.sleep(60)
+                    continue
 
-                    dump('last_diamond', get_diamond[0])
-        except:
-            time.sleep(60)
-            print("Проблемы c отправкой алмазов в телеграм!")
-            continue
+                dump('last_diamond', get_diamond[0])
 
 
         time.sleep(5) 
