@@ -6,8 +6,13 @@ import pickle
 import threading
 import shutil
 import telebot
-client = UMFutures(key=dragons['main'][0],  secret=dragons['main'][1])
+import requests
+
 Wyverna = telebot.TeleBot(TELEGRAM_TOKEN, num_threads=1)
+
+DEPOSIT = 100
+
+client = UMFutures(key=dragons['aurora'][0],  secret=dragons['aurora'][1])
 
 
 #Функция загрузки из файла
@@ -15,6 +20,7 @@ def load(file):
     with open(f'{file}.pkl', 'rb') as f:
         data = pickle.load(f)
     return data
+
 
 #Функция записи в файл
 def dump(file, data):
@@ -30,7 +36,6 @@ def get_gold():
     enriched_gold = [d['symbol'] for d in sorted_gold_10]
     #print(enriched_gold)
     return enriched_gold
-
 
 
 #Находим алмаз
@@ -80,6 +85,50 @@ def find_diamond():
 
     return [diamond, diamond_in_gold[diamond]]
 
+
+#Идем в атаку!
+def orks_attack(symbol):
+    # Получить информацию об обмене
+    exchange_info = client.exchange_info()
+
+
+    rounder = 0
+
+
+    # Перебрать все пары торговли
+    for symbol_info in exchange_info['symbols']:
+        # Найти информацию для нашей криптовалюты
+        if symbol_info['symbol'] == symbol:
+            # Перебрать все ограничения
+            for filter in symbol_info['filters']:
+                # Найти ограничение LOT_SIZE
+                if filter['filterType'] == 'LOT_SIZE':
+                    # Вернуть минимальное количество
+                    min_quantity = str(filter['minQty'])
+
+                    if '.' in min_quantity:
+                        num = min_quantity.split('.')[0]
+                        if int(num) == 0:
+                            rounder = len(min_quantity.split('.')[1])
+                        else:
+                            rounder = 0
+                    else:
+                        rounder = 0
+
+
+    price = round(float(client.ticker_price(symbol)['price']), 5)
+
+    volume = round(DEPOSIT/price, rounder)
+    print(f"Trade volume: {volume}")
+
+    params = {
+        'symbol': symbol,
+        'side': 'BUY',
+        'type': 'MARKET',
+        'quantity': volume,
+    }
+
+    response = client.new_order(**params)
 
 
 ####################################################################
@@ -152,7 +201,19 @@ def shaman_ork_work():
             print(load('last_diamond'))
             if get_diamond[1] > 4:
                 if get_diamond[0] != load('last_diamond'):
-                    Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
+                    
+                    try:
+                        orks_attack(get_diamond[0])
+                    except:
+                        print('Атака провалилась...')
+                        continue
+
+                    try:
+                        Wyverna.send_message(TELEGRAM_CHANNEL, get_diamond)
+                    except:
+                        print('Виверна не смогла доставить алмаз...')
+                        continue
+
                     dump('last_diamond', get_diamond[0])
         except:
             time.sleep(60)
