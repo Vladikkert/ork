@@ -1,0 +1,1 @@
+nohup python3 main_ork.py &

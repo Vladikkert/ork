@@ -8,6 +8,8 @@ import shutil
 import telebot
 import requests
 import logging
+from pytz import timezone 
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d) [%(filename)s]', datefmt='%d/%m/%Y %I:%M:%S',
                     encoding = 'utf-8', filemode='w')
@@ -15,7 +17,14 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s (%(asctime)s): %(m
 warlock = logging.getLogger(__name__)
 handler = logging.FileHandler('warlock.log', encoding='utf-8')
 formatter = logging.Formatter('%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d) [%(filename)s]')
+
+
+tz = timezone('Europe/Moscow') # UTC +3
+formatter.converter = lambda *args: tz.fromutc(datetime.utcnow()).timetuple()
+
 handler.setFormatter(formatter)
+
+
 warlock.addHandler(handler)
 
 Wyverna = telebot.TeleBot(TELEGRAM_TOKEN, num_threads=1)
@@ -183,7 +192,7 @@ def black_ork_work():
             warlock.exception(e)
             time.sleep(60)
             continue
-
+ 
         # Отправляем сообщение что орк работает
         if count_wyverna == 325:    
             try:

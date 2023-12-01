@@ -1,5 +1,9 @@
 import logging
 
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d) [%(filename)s]', datefmt='%d/%m/%Y %I:%M:%S',
+                    encoding = 'utf-8', filemode='w')
+
+
 
 logger = logging.getLogger(__name__)
 handler = logging.FileHandler('test.log', encoding='utf-8')
