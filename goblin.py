@@ -1,18 +1,25 @@
-import logging
+from binance.client import Client
+import pandas as pd
+import talib
 
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d) [%(filename)s]', datefmt='%d/%m/%Y %I:%M:%S',
-                    encoding = 'utf-8', filemode='w')
+# Замените "YOUR_API_KEY" и "YOUR_SECRET_KEY" на свои
+client = Client("YOUR_API_KEY", "YOUR_SECRET_KEY")
 
+# Получаем исторические данные по тикеру
+candles = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1DAY)
 
+# Делаем из данных DataFrame
+df = pd.DataFrame(candles, columns=['date', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_asset_volume', 'number_of_trades', 'taker_buy_base', 'taker_buy_quote', 'ignore'])
+df['date'] = pd.to_datetime(df['date'], unit='ms')  # меняем формат даты
+df.set_index('date', inplace=True)  # делаем дату индексом
 
-logger = logging.getLogger(__name__)
-handler = logging.FileHandler('test.log', encoding='utf-8')
-formatter = logging.Formatter('%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d) [%(filename)s]')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+# Конвертируем столбцы со строковых значений в числовые
+df['open'] = pd.to_numeric(df['open'])
+df['high'] = pd.to_numeric(df['high'])
+df['low'] = pd.to_numeric(df['low'])
+df['close'] = pd.to_numeric(df['close'])
 
-logger.info('Давай протестируем файл на данные?')
-try:
-    10 / 0
-except Exception as e:
-    logger.exception(e)
+# Вычисляем ATR с помощью TA-Lib
+df['ATR'] = talib.ATR(df['high'], df['low'], df['close'], timeperiod=14)
+
+print(df.tail())
