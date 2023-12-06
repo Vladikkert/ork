@@ -1,0 +1,112 @@
+INFO (05/12/2023 09:49:52): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (05/12/2023 10:18:36): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (05/12/2023 10:47:19): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (05/12/2023 11:15:54): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (05/12/2023 11:44:34): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 12:14:40): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 12:43:26): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 01:12:30): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 01:41:14): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 02:10:03): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 02:38:41): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 03:09:36): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 03:38:30): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 04:13:54): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 04:42:42): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 05:13:39): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 05:42:21): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 06:13:20): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 06:42:08): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 07:11:13): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 07:39:59): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 08:08:46): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 08:37:50): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 09:06:46): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 09:35:47): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 10:04:49): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 10:33:42): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 11:02:30): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 11:31:15): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 12:00:15): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 12:29:24): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 12:58:37): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 01:32:13): Орки добывают руду! (Line: 199) [main_ork.py]
+CRITICAL (06/12/2023 02:01:29): Добыча золота приостановилась мой вождь! (Line: 167) [main_ork.py]
+ERROR (06/12/2023 02:01:29): ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')) (Line: 168) [main_ork.py]
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 700, in urlopen
+    httplib_response = self._make_request(
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 446, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 441, in _make_request
+    httplib_response = conn.getresponse()
+  File "/usr/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/usr/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/usr/lib/python3.10/http/client.py", line 287, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 439, in send
+    resp = conn.urlopen(
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 756, in urlopen
+    retries = retries.increment(
+  File "/usr/lib/python3/dist-packages/urllib3/util/retry.py", line 532, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "/usr/lib/python3/dist-packages/six.py", line 718, in reraise
+    raise value.with_traceback(tb)
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 700, in urlopen
+    httplib_response = self._make_request(
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 446, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 441, in _make_request
+    httplib_response = conn.getresponse()
+  File "/usr/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/usr/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/usr/lib/python3.10/http/client.py", line 287, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntuuser/ork/main_ork.py", line 164, in black_ork_work
+    take_gold = get_gold()
+  File "/home/ubuntuuser/ork/main_ork.py", line 51, in get_gold
+    gold = client.ticker_24hr_price_change()
+  File "/home/ubuntuuser/.local/lib/python3.10/site-packages/binance/um_futures/market.py", line 283, in ticker_24hr_price_change
+    return self.query("/fapi/v1/ticker/24hr", params)
+  File "/home/ubuntuuser/.local/lib/python3.10/site-packages/binance/api.py", line 69, in query
+    return self.send_request("GET", url_path, payload=payload)
+  File "/home/ubuntuuser/.local/lib/python3.10/site-packages/binance/api.py", line 116, in send_request
+    response = self._dispatch_request(http_method)(**params)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 557, in get
+    return self.request('GET', url, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 544, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 657, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 498, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+INFO (06/12/2023 02:03:39): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 02:32:48): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 03:05:21): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 03:34:38): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 04:03:27): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 04:32:21): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 05:01:19): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 05:30:12): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 06:00:57): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 06:30:40): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 06:59:38): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 07:30:54): Орки добывают руду! (Line: 199) [main_ork.py]
+INFO (06/12/2023 08:03:26): Орки добывают руду! (Line: 199) [main_ork.py]
